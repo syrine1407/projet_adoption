@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ton-compte/ton-projet.git'
+                git 'https://github.com/syrine1407/projet_adoption'
             }
         }
         stage('Compile') {
