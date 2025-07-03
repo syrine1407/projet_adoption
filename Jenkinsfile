@@ -1,51 +1,21 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven 3.8.8'
+        jdk 'jdk17'
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git 'https://github.com/syrine1407/projet_adoption'
+                sh 'mvn clean install'
             }
         }
-        stage('Compile') {
-            steps {
-                sh 'mvn clean compile'
-            }
-        }
-        stage('Unit Tests') {
+
+        stage('Tests unitaires') {
             steps {
                 sh 'mvn test'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                sh 'mvn sonar:sonar -Dsonar.login=TON_TOKEN -Dsonar.host.url=http://localhost:9000'
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-        stage('Deploy to Nexus') {
-            steps {
-                sh 'mvn deploy'
-            }
-        }
-        stage('Docker Build and Push') {
-            steps {
-                sh 'docker build -t tonutilisateur/tonimage:latest .'
-                sh 'docker push tonutilisateur/tonimage:latest'
-            }
-        }
-        stage('Docker Compose Up') {
-            steps {
-                sh 'docker-compose up -d'
             }
         }
     }
